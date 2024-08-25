@@ -1,4 +1,5 @@
 import random
+import json
 from flask import Flask, request, render_template, jsonify
 from logic import get_next_state
 
@@ -21,22 +22,23 @@ def index():
         
         elif action == 'reset':
             stored_grid = [[0 for _ in range(m)] for _ in range(n)]
-        
-        elif action == 'run':
-            grid = []
-            for i in range(n):
-                row = []
-                for j in range(m):
-                    box_id = f'box-{i}-{j}'
-                    checked = request.form.get(box_id) == 'on'
-                    row.append(1 if checked else 0)
-                grid.append(row)
-            stored_grid = grid
 
         return render_template('index.html', grid=stored_grid, n=n, m=m)
     
     elif request.method == 'GET':
         return render_template('index.html', grid=stored_grid, n=n, m=m)
+
+@app.route('/run', methods=['POST'])
+def run():
+    global stored_grid
+    print("Processing current state after run")
+
+    data = request.get_data(as_text=True)
+    json_data = json.loads(data)
+    grid = json_data.get('grid')
+    stored_grid = grid
+
+    return jsonify(grid=stored_grid)
 
 @app.route('/next_state', methods=['POST'])
 def next_state():
