@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conway's Game of Life</title>
+    <title>The Game of Life</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+    <div class="Title" style="max-width:fit-content;margin-left:auto;margin-right:auto">
+        <h1 style="font:Helvetica;">Conway's Game of Life </h1>
+    </div>
     <div class="controls">
         <form method="POST">
             <button type="submit" name="action" value="random">Randomize</button>
@@ -20,7 +23,7 @@
             <div class="row">
                 {% for j in range(m) %}
                     <input type="checkbox" class="grid-item" id="box-{{i}}-{{j}}" name="box-{{i}}-{{j}}" {% if grid[i][j] %}checked{% endif %}>
-                    <label for="box-{{i}}-{{j}}" style="background-color: {{ 'black' if grid[i][j] else 'lightyellow' }};"></label>
+                    <label for="box-{{i}}-{{j}}"></label>
                 {% endfor %}
             </div>
         {% endfor %}
@@ -28,14 +31,28 @@
 
     <script>
         console.log("Page loaded");
-
-        $('label').click(function () {
-            let input = $(this).prev('input');
-            input.prop('checked', !input.prop('checked'));
-            $(this).css('background-color', input.prop('checked') ? 'black' : 'lightyellow');
-        });
-
         
+        $('#runButton').click(function () {
+            console.log("Run button clicked");
+        
+            let grid = [];
+            $('.row').each(function (i) {
+                let row = [];
+                $(this).find('input').each(function (j) {
+                    row.push($(this).is(':checked') ? 1 : 0);
+                });
+                grid.push(row);
+            });
+        
+            // Send grid state to the server
+            $.post('/run', JSON.stringify({ grid: grid }), function (data) {
+                console.log("Received data:", data);
+                updateGrid(data.grid);
+                setTimeout(getNextState, 10); // Adjust the interval as needed
+            }, 'json').fail(function () {
+                console.log("Failed to submit grid");
+            });
+        });        
 
         function updateGrid(grid) {
             console.log("Updating grid");
@@ -44,7 +61,10 @@
                 let row = $('<div class="row"></div>');
                 for (let j = 0; j < grid[i].length; j++) {
                     let color = grid[i][j] ? 'black' : 'lightyellow';
-                    row.append(`<label style="background-color: ${color};"></label>`);
+                    row.append(`
+                        <input type="checkbox" class="grid-item" id="box-${i}-${j}" name="box-${i}-${j}" ${grid[i][j] ? 'checked' : ''}>
+                        <label for="box-${i}-${j}" style="background-color: ${color};"></label>
+                    `);
                 }
                 $('.grid-container').append(row);
             }
@@ -60,11 +80,6 @@
                 console.log("Failed to get next state");
             });
         }
-
-        $('#runButton').click(function () {
-            console.log("Run button clicked");
-            getNextState();
-        });
     </script>
 </body>
 </html>
