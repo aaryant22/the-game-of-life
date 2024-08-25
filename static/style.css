@@ -1,0 +1,55 @@
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+.controls {
+    margin-bottom: 20px;
+}
+
+.grid-container {
+    display: flex;
+    flex-direction: column;
+    border: 5px solid black;
+}
+
+.row {
+    display: flex;
+}
+
+.grid-item {
+    display: none;
+}
+
+label {
+    width: 20px; 
+    height: 20px;
+    background-color: lightyellow;
+    cursor: pointer;
+    display: inline-block;
+    border: 1px solid black;
+}
+
+.grid-item:checked + label {
+    background-color: black;
+}
+
+button {
+    margin: 5px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
