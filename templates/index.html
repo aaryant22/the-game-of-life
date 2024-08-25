@@ -20,7 +20,7 @@
             <div class="row">
                 {% for j in range(m) %}
                     <input type="checkbox" class="grid-item" id="box-{{i}}-{{j}}" name="box-{{i}}-{{j}}" {% if grid[i][j] %}checked{% endif %}>
-                    <label for="box-{{i}}-{{j}}" style="background-color: {{ 'black' if grid[i][j] else 'lightyellow' }};"></label>
+                    <label for="box-{{i}}-{{j}}"></label>
                 {% endfor %}
             </div>
         {% endfor %}
@@ -29,14 +29,6 @@
     <script>
         console.log("Page loaded");
 
-        $('label').click(function () {
-            let input = $(this).prev('input');
-            input.prop('checked', !input.prop('checked'));
-            $(this).css('background-color', input.prop('checked') ? 'black' : 'lightyellow');
-        });
-
-        
-
         function updateGrid(grid) {
             console.log("Updating grid");
             $('.grid-container').empty();
@@ -44,7 +36,10 @@
                 let row = $('<div class="row"></div>');
                 for (let j = 0; j < grid[i].length; j++) {
                     let color = grid[i][j] ? 'black' : 'lightyellow';
-                    row.append(`<label style="background-color: ${color};"></label>`);
+                    row.append(`
+                        <input type="checkbox" class="grid-item" id="box-${i}-${j}" name="box-${i}-${j}" ${grid[i][j] ? 'checked' : ''}>
+                        <label for="box-${i}-${j}" style="background-color: ${color};"></label>
+                    `);
                 }
                 $('.grid-container').append(row);
             }
