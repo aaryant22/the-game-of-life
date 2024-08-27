@@ -12,10 +12,18 @@ stored_grid = [[0 for _ in range(m)] for _ in range(n)]
 @app.route('/', methods=['GET', 'POST'])
 def index():
     global stored_grid
+    global n,m
 
     if request.method == 'POST':
         action = request.form.get('action')
         print(f"Action received: {action}")
+
+        scale = int(request.form.get('scale_slider', 1))
+
+        n = 20 * scale
+        m = 30 * scale
+        stored_grid = [[0 for _ in range(m)] for _ in range(n)]
+
 
         if action == 'random':
             stored_grid = [[random.randint(0, 1) for _ in range(m)] for _ in range(n)]
@@ -23,10 +31,11 @@ def index():
         elif action == 'reset':
             stored_grid = [[0 for _ in range(m)] for _ in range(n)]
 
-        return render_template('index.html', grid=stored_grid, n=n, m=m)
+        return render_template('index.html', grid=stored_grid, n=n, m=m, scale=scale)
     
     elif request.method == 'GET':
-        return render_template('index.html', grid=stored_grid, n=n, m=m)
+        scale = int(request.form.get('scale_slider', 1))
+        return render_template('index.html', grid=stored_grid, n=n, m=m, scale=scale)
 
 @app.route('/run', methods=['POST'])
 def run():
