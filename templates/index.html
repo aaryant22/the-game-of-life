@@ -9,16 +9,20 @@
 </head>
 <body>
     <div class="Title" style="max-width:fit-content;margin-left:auto;margin-right:auto">
-        <h1 style="font:Helvetica;">Conway's Game of Life </h1>
+        <h1 style="font-family: Garamond;">Conway's Game of Life </h1>
     </div>
     <div class="controls">
         <form method="POST">
             <button type="submit" name="action" value="random">Randomize</button>
             <button type="submit" name="action" value="reset">Reset</button>
             <button type="button" id="runButton">Run</button>
+            <div class="slider-container">
+                <span style="display: flex; align-items: center;margin-right: 10px; font-family: sans-serif; ">Grid Size</span>
+                <input type="range" id="scale_slider" name="scale_slider" min="1" max="10" value="{{ scale }}" onchange="this.form.submit()">
+            </div>
         </form>
     </div>
-    <div class="grid-container">
+    <div class="grid-container" style: "--rows: {{n}}; --cols: {{m}};">
         {% for i in range(n) %}
             <div class="row">
                 {% for j in range(m) %}
