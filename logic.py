@@ -1,7 +1,7 @@
 def get_next_state(grid):
     n = len(grid)
     m = len(grid[0])
-    new_grid = []
+    new_grid = [[0]*m for _ in range(n)]
 
     def count_alive_neighbors(i,j):
 
@@ -16,14 +16,13 @@ def get_next_state(grid):
         return count
     
     for i in range(n):
-        new_grid.append([])
         for j in range(m):
             live_neighbors = count_alive_neighbors(i, j)
             if grid[i][j] == 0 and live_neighbors==3:
-                new_grid[i].append(1)
+                new_grid[i][j] = 1
             elif grid[i][j] == 1 and (live_neighbors<2 or live_neighbors>3):
-                new_grid[i].append(0)
+                new_grid[i][j] = 0
             else:
-                new_grid[i].append(grid[i][j])
+                new_grid[i][j] = grid[i][j]
             
     return new_grid
